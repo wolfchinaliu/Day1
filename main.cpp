@@ -4,6 +4,8 @@
 #include <iomanip>
 #include <stdio.h>
 #include <cstring>
+#include "Student.h"
+
 using namespace std;
 
 extern int aa;
@@ -248,11 +250,11 @@ int main() {
      *  crror:表示非缓冲错误输入，表示插入到err中的数据会立马输出，格式为：err << 也是可以连续使用 <<
      *  elog:表示标准的日志流，该流对象是缓冲流，当有数据插入到里面的时候，知道该缓冲满了才会将数据输出。格式 clog <<  <<可以连续使用
      */
-    char name[50];
+/*    char name[50];
     cin>>name;
     cout << "name:" << name << endl;
     cerr << "Error:" << name << endl;
-    clog << "Log:" << name << endl;
+    clog << "Log:" << name << endl;*/
     /**
      * C++中数据结构：数组可以存储相同类型的数据，但是对于结构Struct 来说可以存储不同类型的不同数据。
      *  在结构中，想要访问结构中的属性，可以直接通过 structName.porperty即可
@@ -276,7 +278,24 @@ int main() {
 
     cout << "books1:[" << "name:" << books1.name << " title:" << books1.title << " sice:" << books1.sice << "]"<< endl;
     cout << "books2:[" << "name:" << books2.name << " title:" << books2.title << " sice:" << books2.sice << "]"<< endl;
-
+    /**
+     * class对象函数的调动
+     * 在class中如果在类对象中直接调用创建函数，或者是在class中声明函数，在通过外面实现函数。
+     * public protect private 三种继继承方式 class中的默认修饰符是private。
+     * 对于public 所有的都可以访问，对于protect属性，只有派生类可以访问和友元函数可以访问，对于private只有自己可以访问。
+     * public 继承的话，派生类中的变量不会改变，基类中的public还是public变量，protect变量还是protect变量，private还是private
+     * protect 继承的话，派生类中的public 修饰的话会变成protect，protect还是protect，private还是private
+     * private 继承的话，派生类中的public和protect都会变成private，private也会变成private。
+     */
+    //创建一个对象
+    Student student;
+    //调用class参数
+    strcpy(student.name, "java");
+    cout << "student.name:" << student.name << endl;
+    cout << "student.pice:" << student.pice << endl;
+    cout << "sutdent.title:" << student.title << endl;
+    cout << "sutdent.sum():" << student.sum() << endl;
+    cout << "sutdent.getName():" << student.getName() << endl;
     return 0;
 
 }
