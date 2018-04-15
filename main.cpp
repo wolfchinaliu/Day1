@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <cstring>
 #include "Student.h"
+#include "StudentDemo.h"
 
 using namespace std;
 
@@ -20,10 +21,14 @@ struct Books{
 
 
 };
-
+int Student::age = 20;
 //声明函数
 void swap(int &x, int &y);
 
+//定义内联函数
+inline int getMax(int x,int y){
+    return x > y ? x : y;
+}
 int main() {
 
     cout << "Hello, World! Jerry Hello\n";//c++单行注释
@@ -279,7 +284,7 @@ int main() {
     cout << "books1:[" << "name:" << books1.name << " title:" << books1.title << " sice:" << books1.sice << "]"<< endl;
     cout << "books2:[" << "name:" << books2.name << " title:" << books2.title << " sice:" << books2.sice << "]"<< endl;
     /**
-     * class对象函数的调动
+     * class对象函数的调用
      * 在class中如果在类对象中直接调用创建函数，或者是在class中声明函数，在通过外面实现函数。
      * public protect private 三种继继承方式 class中的默认修饰符是private。
      * 对于public 所有的都可以访问，对于protect属性，只有派生类可以访问和友元函数可以访问，对于private只有自己可以访问。
@@ -296,7 +301,98 @@ int main() {
     cout << "sutdent.title:" << student.title << endl;
     cout << "sutdent.sum():" << student.sum() << endl;
     cout << "sutdent.getName():" << student.getName() << endl;
+    /**
+     * class的构造函数和析构函数
+     *  1：对于构造函数来说，它是一种特殊的成员函数，名字和类名一致，没有返回值，可以传入参数进行实例化，会在创建对象的时候执行
+     *  2：对于析构函数来说也是一样，但是不用与构造函数，析构函数的名字前面加个 "~" 符号进行区分，析构函数是每次删除所创建对象的
+     *     时候执行，析构函数有助于程序跳出（文件关闭，内存释放的时候）前释放资源。
+     *     2.2：对于析构函数来说，没有返回值，也没有传入参数。
+     */
+    //调用构造函数
+    Student student1(12, const_cast<char *>("JAVA"), const_cast<char *>("JAVA Program"));
+    cout << "student1.name:" << student1.name << endl;
+    cout << "student1.pice:" << student1.pice << endl;
+    cout << "student.title:" << student1.title << endl;
+    //析构函数默认在函数删除的时候执行，所以不需要调用
+    /**
+     * 拷贝构造函数，什么时候调动拷贝构造函数，只有当class中包含或者内置指针变量是才需要复制函数
+     * 拷贝构造函数是特殊的构造函数，该函数的参数为 const修饰的对象引用常量 例如： const Student &st
+     * 拷贝函数用在什么地方：
+     *  1：一个对象通过值传递的方式传入函数体
+     *  2：一个函数以值传递的方式从函数返回
+     *  3：一个对象需要通过另一个对象进行初始化
+     */
+    //测试拷贝构造函数
+    Student student2(student1);
+    cout << "student2.name:" << student2.name << endl;
+    cout << "student2.title" << student2.title << endl;
+    cout << "student2.pice:" << student2.pice << endl;
+    /**
+     * 友元函数：
+     *  对于友元函数来说，函数的定义是放在class的外部，但是有访问class对象的private属性和protect属性的权限。
+     *  对于友元函数来说，如果参数中包含static对象，这不需要传入对象来引用，如果是全局变量，也不需要通过对象的引用来调用
+     *  可以直接调用友元函数，不用通过对象或者指针的引用
+     *  友元函数需要通过 friend 标识符修饰
+     */
+    //友元函数的调用
+
+    cout << "student2.getDoublePrice():" << getDoublePice(student2) << endl;
+
+    /**
+     * 内联函数：对于内联函数来说一般是小于十行以内采用内联函数，内联函数是通过inline 关键字修饰的函数
+     * 当编辑器在编译的时候，一般会将调用内联函数代码块替换为内联函数的实现，提高运行效率，但是代码量会变大变多
+     * 这是一种空间换区时间的方式，同时一般强调 开关 switch语句一般不适合在内联函数
+     */
+    //调用内联函数
+    cout << "max:" << getMax(200, 100) << endl;
+    /**
+     * this 指针：
+     *      只有成员函数才是有this指针，可以指向class中的属性
+     *      对于友元函数和静态函数都没有this 指针
+     * 指向class的指针，对于指向class的指针和指向struct的指针用法基本一致
+     *      对于class和struct的区别之前讲过？
+     * 静态变量和静态方法：
+     *       对于静态变量来说，不管创造多少个静态变量都只有一个副本，静态变量只能在class中定义但是不能声明，
+     *       声明要在class外部声明。
+     *       静态函数只能调用静态变量，不能调用非静态变量，静态函数没有this指针。
+     *       静态变量的声明和初始化只能在函数外面。
+     *       静态成员函数只能在class中声明
+     */
+
+    //样例
+    Student *s;
+    s = &student2;
+    cout << "s.name" << s->name << endl;
+    cout << "s.title:" << s->title << endl;
+    //静态变量和函数的调用
+    cout << "age:" << Student::age << endl;
+    cout << "Student.getAge():" << Student::getAge() << endl;
+    /**
+     * C++中继承的方式：
+     *  通过":"表示继承方式，C++中支持多继承，Java中不支持。
+     *  派生类继承了基类的所有方法，但是有些方法没有继承
+     *          1：构造函数，析构函数，拷贝构造函数
+     *          2：友元函数
+     *          3：基类的重载运算符
+     *
+     */
+    StudentDemo demo;
+    cout << "demo.getAge:" << demo.getAge() << endl;
+    /**
+     * 函数的重载和运算符的重载
+     *  1：函数的重载，通过定义不同的形参（参数的个数，参数的类型，参数的顺序）来重载函数，程序会根据重载策略决定运行那个函数
+     *  2：重载的运算符是一种带有特殊名称的函数：函数名通过 operator 关键字后加要重载的运算符符号，也有函数返回值和函数参数。
+     *     对于const 有没有无所谓
+     *  3：不可重载的运算符：.成员访问运算符 ::域运算符  sizeof 长度运算符 .* ->* 指针运算符 ? 条件运算符 #预处理运算符
+     */
+    //函数的重载
+    int i =2;
+    cout << "demo.getAge:" << demo.getStudentAge(i) << endl;
+    demo = demo+demo;
+    cout << "demo.+:" << demo.age<< endl;
+    //运算符的重载
     return 0;
+
 
 }
 void swap(int& x,int&  y){
